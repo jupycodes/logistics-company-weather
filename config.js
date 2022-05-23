@@ -2,9 +2,9 @@ const environment = process.env.NODE_ENV || "production"
 
 if(environment === "production") {
     host = 'eyvqcfxf5reja3nv.cbetxkdyhwsb.us-east-1.rds.amazonaws.com';
-    database = 'jub3ebbn7a9ui09k';
-    username = 'z555882molusdtz9';
-    password= 'cjo1prpgzr040lq4';
+    database = 'ozixnkc8z25cmlp5';
+    username = 'dx6tau2kpabchw5m';
+    password = 'o9yupzs8nrwg1kc1';
 } else {
     host = 'localhost';
     database = 'shopify-production';
