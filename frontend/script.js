@@ -1,79 +1,86 @@
 function deleteItem(){
-    var itemId = document.getElementById("itemId").value;
-    const http = new XMLHttpRequest()
-    http.open("DELETE", `/${itemId}`)
-    http.send()
-    alert(`Item ${itemId} successfully deleted`)
+    let itemId = document.getElementById("itemId").value;
+    const http = new XMLHttpRequest();
+    http.open("DELETE", `/${itemId}`);
+    http.send();
+    alert(`Item ${itemId} successfully deleted`);
 }
 function editItem(){
-    var itemId = document.getElementById("itemId").value;
+    let itemId = document.getElementById("itemId").value;
     document.getElementById("editForm").hidden = false;
     document.getElementById("editForm").setAttribute("method", "POST");
     document.getElementById("editForm").setAttribute("action", `/items/${itemId}`);
 }
 function showAlert(type){
-    alert(`Item was successfully modified.`)
+    alert(`Item was successfully modified.`);
 }
   
   async function loadWeatherData(city) {
     const options = {
       method: 'GET',
       };
-    const response = await fetch(`/city/${city}`, options)
-    const apiResponse = await response.text()
-    return apiResponse
+    const response = await fetch(`/city/${city}`, options);
+    const apiResponse = await response.text();
+    return apiResponse;
   }
 
   function loadData(url) {
     document.getElementById("csvButton").disabled = false;
-    const http = new XMLHttpRequest()
-    http.open("GET", url)
-    http.send()
+    const http = new XMLHttpRequest();
+    http.open("GET", url);
+    http.send();
     http.onload = () => {
-      var jsonData = JSON.parse(http.responseText)
-      var col = []
-      for (var i = 0; i < jsonData.length; i++) {
-        for (var key in jsonData[i]) {
+      let jsonData = JSON.parse(http.responseText);
+      let col = [];
+      for (let i = 0; i < jsonData.length; i++) {
+        for (let key in jsonData[i]) {
           if (col.indexOf(key) === -1) {
-            col.push(key)
+            col.push(key);
           }
         }
       }
-      col.push("weather")
+      col.push("weather");
 
-      var table = document.createElement("table");
+      let table = document.createElement("table");
       table.className = 'table';
-      var tr = table.insertRow(-1);
-      for (var i = 0; i < col.length; i++) {
-        var th = document.createElement("th");
+      let tr = table.insertRow(-1);
+      for (let i = 0; i < col.length; i++) {
+        let th = document.createElement("th");
         th.innerHTML = col[i];
         tr.appendChild(th);
       }
       
-      for (var i = 0; i < jsonData.length; i++) {
+      for (let i = 0; i < jsonData.length; i++) {
         tr = table.insertRow(-1);
-        for (var j = 0; j < col.length; j++) {
-          var tabCell = tr.insertCell(-1);
-          tabCell.innerHTML = jsonData[i][col[j]];
-        }
-        const weatherData = loadWeatherData(jsonData[i][col[5]])
-        console.log(weatherData)
-        tabCell.innerHTML = weatherData
+        for (let j = 0; j < col.length; j++) {
+          let tabCell = tr.insertCell(-1);         
 
+          if(j === 6) {
+            let city = jsonData[i][col[5]];
+            const weatherData = loadWeatherData(city)
+              .then( res => {
+                console.log(res);
+                tabCell.innerHTML = res;
+              })
+          }else{
+            tabCell.innerHTML = jsonData[i][col[j]];
+          }
+        }
+        
       }
-      var divShowData = document.getElementById('showData');
+      let divShowData = document.getElementById('showData');
       divShowData.innerHTML = "";
       divShowData.appendChild(table);
     }
   }
 
   function tableToCSV() {
-    var csv_data = [];
-    var rows = document.getElementsByTagName('tr');
-    for (var i = 0; i < rows.length; i++) {
-        var cols = rows[i].querySelectorAll('td,th');
-        var csvrow = [];
-        for (var j = 0; j < cols.length; j++) {
+    let csv_data = [];
+    let rows = document.getElementsByTagName('tr');
+    for (let i = 0; i < rows.length; i++) {
+        let cols = rows[i].querySelectorAll('td,th');
+        let csvrow = [];
+        for (let j = 0; j < cols.length; j++) {
             csvrow.push(cols[j].innerHTML);
         }
         csv_data.push(csvrow.join(","));
@@ -84,9 +91,9 @@ function showAlert(type){
 
 function downloadCSVFile(csv_data) {
     CSVFile = new Blob([csv_data], { type: "text/csv" });
-    var temp_link = document.createElement('a');
+    let temp_link = document.createElement('a');
     temp_link.download = "GfG.csv";
-    var url = window.URL.createObjectURL(CSVFile);
+    let url = window.URL.createObjectURL(CSVFile);
     temp_link.href = url;
     temp_link.style.display = "none";
     document.body.appendChild(temp_link);
